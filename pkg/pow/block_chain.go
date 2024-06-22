@@ -13,11 +13,21 @@ type Blockchain struct {
 }
 
 // AddBlock handles adding a block to the blockchain
-func (bc *Blockchain) AddBlock(data string, difficulty int) {
+func (bc *Blockchain) AddBlock(data string, transactions []Transaction, difficulty int) {
+	if len(transactions) == 0 {
+		log.Println("No transactions to add")
+		return
+	}
+
 	bc.mutex.Lock()
 	defer bc.mutex.Unlock()
-	prevBlock := bc.blocks[len(bc.blocks)-1]
-	newBlock := NewBlock(data, prevBlock)
+
+	lastBlock := bc.blocks[len(bc.blocks)-1]
+	newBlock := NewBlock(data, lastBlock, transactions)
+	if !newBlock.areTransactionsValid() {
+		log.Println("Attempt to add invalid transactions to the block")
+		return
+	}
 	newBlock.mine(difficulty)
 	bc.blocks = append(bc.blocks, newBlock)
 	log.Printf("Block %d added to blockchain\n", newBlock.Index)

@@ -32,7 +32,24 @@ func main() {
 		}
 	}
 
+	// Initialize blockchain
 	bc := pow.NewBlockchain()
-	bc.AddBlock("First Block after Genesis", difficulty)
-	bc.AddBlock("Second Block after First", difficulty)
+
+	// Define transactions for the first block
+	txs1 := []pow.Transaction{
+		{Sender: "Alice", Receiver: "Bob", Amount: 10},
+		{Sender: "Charlie", Receiver: "Dave", Amount: 15},
+	}
+
+	// Add first block with transactions
+	bc.AddBlock("First Block after Genesis", txs1, difficulty)
+
+	// Define transactions for the second block
+	txs2 := []pow.Transaction{
+		{Sender: "Eve", Receiver: "Frank", Amount: 5},
+		{Sender: "Gina", Receiver: "Harry", Amount: 20},
+	}
+
+	// Add second block with transactions
+	bc.AddBlock("Second Block after First", txs2, difficulty)
 }
